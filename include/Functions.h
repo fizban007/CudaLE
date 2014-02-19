@@ -2,7 +2,7 @@
 #include "cudaDef.h"
 #include "Operators.h"
 
-namespace CudaET {
+namespace CudaLE {
 
 struct Sin
 {

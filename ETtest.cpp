@@ -1,8 +1,8 @@
 #include<iostream>
 #include<math.h>
-#include "CudaET.h"
+#include "CudaLE.h"
 
-using namespace CudaET;
+using namespace CudaLE;
 
 const CoordinateType type = COORD_CYLINDRICAL;
 
