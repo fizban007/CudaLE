@@ -110,6 +110,16 @@ namespace CudaLE {
         return BinaryOp<Divide, Left, Right>(lhs, rhs);
     }
 
+    template <typename Left>
+    BinaryOp<Divide, Left, ConstOp> operator/ (Left lhs, double rhs) {
+        return BinaryOp<Divide, Left, ConstOp>(lhs, ConstOp(rhs));
+    }
+
+    template <typename Right>
+    BinaryOp<Divide, ConstOp, Right> operator/ (double lhs, Right rhs) {
+        return BinaryOp<Divide, ConstOp, Right>(ConstOp(lhs), rhs);
+    }
+
     template<int power>
     struct Pow
     {
