@@ -1,60 +1,63 @@
+#ifndef  _FUNCTIONS_H_
+#define  _FUNCTIONS_H_
+
 #include <math.h>
-#include "cudaDef.h"
+#include "cudaControl.h"
 #include "Operators.h"
 
 namespace CudaLE {
 
 struct Sin
 {
-    HOST_DEVICE static double apply(double x) {
+    HD_INLINE static double apply(double x) {
         return sin(x);
     }
 };
 
 template <typename Arg>
-UnaryOp<Sin, Arg> _sin(Arg arg) {
+UnaryOp<Sin, Arg> sin(Arg arg) {
     return UnaryOp<Sin, Arg>(arg);
 }
 
 struct Cos
 {
-    HOST_DEVICE static double apply(double x) {
+    HD_INLINE static double apply(double x) {
         return cos(x);
     }
 };
 
 template <typename Arg>
-UnaryOp<Cos, Arg> _cos(Arg arg) {
+UnaryOp<Cos, Arg> cos(Arg arg) {
     return UnaryOp<Cos, Arg>(arg);
 }
 
 struct Exp
 {
-    HOST_DEVICE static double apply(double x) {
+    HD_INLINE static double apply(double x) {
         return exp(x);
     }
 };
 
 template <typename Arg>
-UnaryOp<Exp, Arg> _exp(Arg arg) {
+UnaryOp<Exp, Arg> exp(Arg arg) {
     return UnaryOp<Exp, Arg>(arg);
 }
 
 struct Log
 {
-    HOST_DEVICE static double apply(double x) {
+    HD_INLINE static double apply(double x) {
         return log(x);
     }
 };
 
 template <typename Arg>
-UnaryOp<Log, Arg> _log(Arg arg) {
+UnaryOp<Log, Arg> log(Arg arg) {
     return UnaryOp<Log, Arg>(arg);
 }
 
 struct Plus
 {
-    HOST_DEVICE static double apply(double a, double b) {
+    HD_INLINE static double apply(double a, double b) {
         return a + b;
     }
 };
@@ -64,9 +67,19 @@ BinaryOp<Plus, Left, Right> operator+ (Left lhs, Right rhs) {
     return BinaryOp<Plus, Left, Right>(lhs, rhs);
 }
 
+// template <typename Left>
+// BinaryOp<Plus, Left, ConstOp> operator+ (Left lhs, double rhs) {
+//     return BinaryOp<Plus, Left, ConstOp>(lhs, ConstOp(rhs));
+// }
+
+// template <typename Right>
+// BinaryOp<Plus, ConstOp, Right> operator+ (double lhs, Right rhs) {
+//     return BinaryOp<Plus, ConstOp, Right>(ConstOp(lhs), rhs);
+// }
+
 struct Minus
 {
-    HOST_DEVICE static double apply(double a, double b) {
+    HD_INLINE static double apply(double a, double b) {
         return a - b;
     }
 };
@@ -78,7 +91,7 @@ BinaryOp<Minus, Left, Right> operator- (Left lhs, Right rhs) {
 
 struct Multiply
 {
-    HOST_DEVICE static double apply(double a, double b) {
+    HD_INLINE static double apply(double a, double b) {
         return a * b;
     }
 };
@@ -88,19 +101,19 @@ BinaryOp<Multiply, Left, Right> operator* (Left lhs, Right rhs) {
     return BinaryOp<Multiply, Left, Right>(lhs, rhs);
 }
 
-template <typename Left>
-BinaryOp<Multiply, Left, ConstOp> operator* (Left lhs, double rhs) {
-    return BinaryOp<Multiply, Left, ConstOp>(lhs, ConstOp(rhs));
-}
+// template <typename Left>
+// BinaryOp<Multiply, Left, ConstOp> operator* (Left lhs, double rhs) {
+//     return BinaryOp<Multiply, Left, ConstOp>(lhs, ConstOp(rhs));
+// }
 
-template <typename Right>
-BinaryOp<Multiply, ConstOp, Right> operator* (double lhs, Right rhs) {
-    return BinaryOp<Multiply, ConstOp, Right>(ConstOp(lhs), rhs);
-}
+// template <typename Right>
+// BinaryOp<Multiply, ConstOp, Right> operator* (double lhs, Right rhs) {
+//     return BinaryOp<Multiply, ConstOp, Right>(ConstOp(lhs), rhs);
+// }
 
 struct Divide
 {
-    HOST_DEVICE static double apply(double a, double b) {
+    HD_INLINE static double apply(double a, double b) {
         return a / b;
     }
 };
@@ -110,20 +123,20 @@ BinaryOp<Divide, Left, Right> operator/ (Left lhs, Right rhs) {
     return BinaryOp<Divide, Left, Right>(lhs, rhs);
 }
 
-template <typename Left>
-BinaryOp<Divide, Left, ConstOp> operator/ (Left lhs, double rhs) {
-    return BinaryOp<Divide, Left, ConstOp>(lhs, ConstOp(rhs));
-}
+// template <typename Left>
+// BinaryOp<Divide, Left, ConstOp> operator/ (Left lhs, double rhs) {
+//     return BinaryOp<Divide, Left, ConstOp>(lhs, ConstOp(rhs));
+// }
 
-template <typename Right>
-BinaryOp<Divide, ConstOp, Right> operator/ (double lhs, Right rhs) {
-    return BinaryOp<Divide, ConstOp, Right>(ConstOp(lhs), rhs);
-}
+// template <typename Right>
+// BinaryOp<Divide, ConstOp, Right> operator/ (double lhs, Right rhs) {
+//     return BinaryOp<Divide, ConstOp, Right>(ConstOp(lhs), rhs);
+// }
 
 template<int power>
 struct Pow
 {
-    HOST_DEVICE static double apply(double a) {
+    HD_INLINE static double apply(double a) {
         return pow(a, power);
     }
 };
@@ -134,3 +147,7 @@ UnaryOp<Pow<power>, Arg> _pow(Arg arg) {
 }
 
 }
+
+
+
+#endif   // ----- #ifndef _FUNCTIONS_H_  ----- 
