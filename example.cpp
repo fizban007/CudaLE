@@ -7,16 +7,19 @@ using namespace CudaLE;
 // #define MY_DECLARE_FUNCTOR_TYPE(a, b) typedef typeof(a) b
 #define DEFINE_FUNCTOR(NAME, FUNCTOR)      \
     typedef typeof(FUNCTOR) type_ ## NAME; \
-    type_ ## NAME NAME;               \
+    type_ ## NAME NAME
 
 class FuncTest
 {
 public:
-    DEFINE_FUNCTOR(f, sin(3.0 * _1) + 3.0 * _2);
-    DEFINE_FUNCTOR(g, log(_1 * _2));
+    DEFINE_FUNCTOR(f, cos(3.0 * _1) + 3.0 * _2);
+    DEFINE_FUNCTOR(g, _1 * _2 * _2);
+    DEFINE_FUNCTOR(h, pow<4>(_1));
 
-    FuncTest() : f(sin(3.0 * _1) + 3.0 * _2), 
-                 g(log(_1 * _2)) {}
+    FuncTest() : f(cos(3.0 * _1) + 3.0 * _2), 
+                 g(_1 * _2 * _2),
+                 h(pow<4>(_1))
+        {}
     virtual ~FuncTest() {}
 }; // ----- end of class FuncTest -----
 
@@ -30,7 +33,10 @@ int main()
     // std::cout << func(2.0, 3.0) << std::endl;
     std::cout << F.f(2.0, 3.0) << std::endl;
     std::cout << (2.0 * F.f * F.g)(2.0, 3.0) << std::endl;
-    std::cout << (D<2>(F.f))(2.0, 3.0) << " " << 3.0 * cos(6.0) << " " << 3.0 << std::endl;
+    std::cout << (D<1>(F.f) / D<2>(F.f))(2.0, 3.0) << " " << -3.0 * sin(6.0) << " " << 3.0 << std::endl;
+    std::cout << D<2>(D<1>(F.g))(2.0, 3.0) << std::endl;
+    std::cout << D<1>(F.h)(3.0) << std::endl;
+    std::cout << D<2>(F.h)(3.0) << std::endl;
     // std::cout << (ConstOp(3.0) * f.get_f ())(2.0, 3.0) << std::endl;
     // std::cout << func(2.0, 3.0) << std::endl;
     // std::cout << f.get_functor2()(2.0, 3.0) << std::endl;
