@@ -142,7 +142,7 @@ struct Pow
 };
 
 template <int power, typename Arg>
-UnaryOp<Pow<power>, Arg> _pow(Arg arg) {
+UnaryOp<Pow<power>, Arg> pow(Arg arg) {
     return UnaryOp<Pow<power>, Arg>(arg);
 }
 

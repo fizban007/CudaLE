@@ -4,7 +4,7 @@
 ///
 /// __Description__:     Declares the base operators for the expression template
 ///
-/// __Last modified__:   <2014-07-08 23:24:22 alex>\n
+/// __Last modified__:   <2014-07-09 01:46:36 alex>\n
 /// __Version__:         1.0\n
 /// __Author__:          Alex Chen, fizban007@gmail.com\n
 /// __Organization__:    Columbia University
@@ -38,6 +38,7 @@ struct BinaryOp
     typedef BinaryOp<Op, Left, Right> type;
 
     HOST_DEVICE BinaryOp(Left t1, Right t2) : left(t1), right(t2) {}
+    HOST_DEVICE BinaryOp(const type& op) : left(op.left), right(op.right) {}
     HOST_DEVICE BinaryOp() {}
 
     HD_INLINE double operator() (double x1, double x2 = 0.0, double x3 = 0.0) {
@@ -53,6 +54,7 @@ struct BinaryOp<Op, Left, double>
     typedef BinaryOp<Op, Left, double> type;
 
     HOST_DEVICE BinaryOp(Left t1, double t2) : left(t1), right(ConstOp(t2)) {}
+    HOST_DEVICE BinaryOp(const type& op) : left(op.left), right(op.right) {}
     HOST_DEVICE BinaryOp() {}
         
     HD_INLINE double operator() (double x1, double x2 = 0.0, double x3 = 0.0) {
@@ -68,6 +70,7 @@ struct BinaryOp<Op, double, Right>
     typedef BinaryOp<Op, double, Right> type;
 
     HOST_DEVICE BinaryOp(double t1, Right t2) : left(ConstOp(t1)), right(t2) {}
+    HOST_DEVICE BinaryOp(const type& op) : left(op.left), right(op.right) {}
     HOST_DEVICE BinaryOp() {}
         
     HD_INLINE double operator() (double x1, double x2 = 0.0, double x3 = 0.0) {
@@ -127,6 +130,7 @@ struct UnaryOp
     typedef UnaryOp<Op, Arg> type;
 
     HOST_DEVICE UnaryOp(Arg t1) : arg(t1) {}
+    HOST_DEVICE UnaryOp(const type& op) : arg(op.arg) {}
     HOST_DEVICE UnaryOp() {}
 
     HD_INLINE double operator() (double x1, double x2 = 0.0, double x3 = 0.0) {
@@ -151,3 +155,4 @@ struct UnaryOp
 }
 
 #endif   // ----- #ifndef _OPERATORS_H_  ----- 
+
