@@ -4,7 +4,7 @@
 ///
 /// __Description__:     Declares the variables used for the expression template
 ///
-/// __Last modified__:   <2014-02-19 16:14:22 alex>\n
+/// __Last modified__:   <2014-07-08 19:14:47 alex>\n
 /// __Version__:         1.0\n
 /// __Author__:          Alex Chen, fizban007@gmail.com\n
 /// __Organization__:    Columbia University
@@ -14,7 +14,7 @@
 #ifndef  _VARIABLE_H_
 #define  _VARIABLE_H_
 
-#include "cudaDef.h"
+#include "cudaControl.h"
 
 namespace CudaLE {
 
