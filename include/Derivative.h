@@ -15,30 +15,37 @@ template <int Argument, typename Expr>
 struct Derivative;
 
 template <int Argument, int Arg2, typename Expr>
+HD_INLINE
 typename Derivative<Argument, typename Derivative<Arg2, Expr>::result_type>::result_type 
 D(const Derivative<Arg2, Expr>& deriv);
 
 template <int Argument, typename Op, typename Left, typename Right>
+HD_INLINE
 typename Derivative<Argument, BinaryOp<Op, Left, Right> >::result_type
 D(const BinaryOp<Op, Left, Right>& expr);
 
 template <int Argument,typename Op, typename Right>
+HD_INLINE
 typename Derivative<Argument, BinaryOp<Op, double, Right> >::result_type
 D(const BinaryOp<Op, double, Right>& expr);
 
 template <int Argument,typename Op, typename Left>
+HD_INLINE
 typename Derivative<Argument, BinaryOp<Op, Left, double> >::result_type
 D(const BinaryOp<Op, Left, double>& expr);
 
 template <int Argument,typename Op, typename Expr>
+HD_INLINE
 typename Derivative<Argument, UnaryOp<Op, Expr> >::result_type
 D(const UnaryOp<Op, Expr>& expr);
 
 template <int Argument, int n>
+HD_INLINE
 typename Derivative<Argument, Var<n, double> >::result_type
 D(const Var<n, double>& var);
 
 template <int Argument>
+HD_INLINE
 typename Derivative<Argument, double>::result_type
 D(const double& val);
 
@@ -125,7 +132,7 @@ struct Derivative<Argument, BinaryOp<Divide, Left, Right> >
     // Right right;
     typedef BinaryOp<Divide, Left, Right> arg_type;
     typedef BinaryOp<Divide, BinaryOp<Minus,
-                                      BinaryOp<Multiply, typename Derivative<Argument, Left>::resut_type, Right>,
+                                      BinaryOp<Multiply, typename Derivative<Argument, Left>::result_type, Right>,
                                       BinaryOp<Multiply, Left, typename Derivative<Argument, Right>::result_type> >,
                      BinaryOp<Multiply, Right, Right> > result_type;
     result_type derivative;
@@ -271,48 +278,56 @@ struct Derivative<Argument, Var<var, double > >
 };
 
 template <int Argument, typename Op, typename Left, typename Right>
+HD_INLINE
 typename Derivative<Argument, BinaryOp<Op, Left, Right> >::result_type 
 D(const BinaryOp<Op, Left, Right>& expr) {
     return Derivative<Argument, BinaryOp<Op, Left, Right> >(expr.left, expr.right).derivative;
 }
 
 template <int Argument,typename Op, typename Right>
+HD_INLINE
 typename Derivative<Argument, BinaryOp<Op, double, Right> >::result_type 
 D(const BinaryOp<Op, double, Right>& expr) {
     return Derivative<Argument, BinaryOp<Op, double, Right> >(expr.left.val, expr.right).derivative;
 }
 
 template <int Argument,typename Op, typename Left>
+HD_INLINE
 typename Derivative<Argument, BinaryOp<Op, Left, double> >::result_type 
 D(const BinaryOp<Op, Left, double>& expr) {
     return Derivative<Argument, BinaryOp<Op, Left, double> >(expr.left, expr.right.val).derivative;
 }
 
 template <int Argument,typename Op, typename Expr>
+HD_INLINE
 typename Derivative<Argument, UnaryOp<Op, Expr> >::result_type
 D(const UnaryOp<Op, Expr>& expr) {
     return Derivative<Argument, UnaryOp<Op, Expr> >(expr.arg).derivative;
 }
 
 template <int Argument, int n>
+HD_INLINE
 typename Derivative<Argument, Var<n, double> >::result_type
 D(const Var<n, double>& var) {
     return Derivative<Argument, Var<n, double> >().derivative;
 }
 
 template <int Argument>
+HD_INLINE
 typename Derivative<Argument, double>::result_type
 D(const double& val) {
     return Derivative<Argument, double>().derivative;
 }
 
 template <int Argument>
+HD_INLINE
 typename Derivative<Argument, ConstOp>::result_type
 D(const ConstOp& val) {
     return Derivative<Argument, ConstOp>().derivative;
 }
 
 template <int Argument, int Arg2, typename Expr>
+HD_INLINE
 typename Derivative<Argument, typename Derivative<Arg2, Expr>::result_type>::result_type
 D(const Derivative<Arg2, Expr>& deriv) {
     return D<Argument>(deriv.derivative);
