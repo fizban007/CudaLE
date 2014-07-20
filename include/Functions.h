@@ -15,7 +15,7 @@ struct Sin
 };
 
 template <typename Arg>
-UnaryOp<Sin, Arg> sin(Arg arg) {
+HD_INLINE UnaryOp<Sin, Arg> sin(Arg arg) {
     return UnaryOp<Sin, Arg>(arg);
 }
 
@@ -27,7 +27,7 @@ struct Cos
 };
 
 template <typename Arg>
-UnaryOp<Cos, Arg> cos(Arg arg) {
+HD_INLINE UnaryOp<Cos, Arg> cos(Arg arg) {
     return UnaryOp<Cos, Arg>(arg);
 }
 
@@ -39,7 +39,7 @@ struct Exp
 };
 
 template <typename Arg>
-UnaryOp<Exp, Arg> exp(Arg arg) {
+HD_INLINE UnaryOp<Exp, Arg> exp(Arg arg) {
     return UnaryOp<Exp, Arg>(arg);
 }
 
@@ -51,7 +51,7 @@ struct Log
 };
 
 template <typename Arg>
-UnaryOp<Log, Arg> log(Arg arg) {
+HD_INLINE UnaryOp<Log, Arg> log(Arg arg) {
     return UnaryOp<Log, Arg>(arg);
 }
 
@@ -63,7 +63,7 @@ struct Plus
 };
 
 template <typename Left, typename Right>
-BinaryOp<Plus, Left, Right> operator+ (Left lhs, Right rhs) {
+HD_INLINE BinaryOp<Plus, Left, Right> operator+ (Left lhs, Right rhs) {
     return BinaryOp<Plus, Left, Right>(lhs, rhs);
 }
 
@@ -85,7 +85,7 @@ struct Minus
 };
 
 template <typename Left, typename Right>
-BinaryOp<Minus, Left, Right> operator- (Left lhs, Right rhs) {
+HD_INLINE BinaryOp<Minus, Left, Right> operator- (Left lhs, Right rhs) {
     return BinaryOp<Minus, Left, Right>(lhs, rhs);
 }
 
@@ -97,7 +97,7 @@ struct Multiply
 };
 
 template <typename Left, typename Right>
-BinaryOp<Multiply, Left, Right> operator* (Left lhs, Right rhs) {
+HD_INLINE BinaryOp<Multiply, Left, Right> operator* (Left lhs, Right rhs) {
     return BinaryOp<Multiply, Left, Right>(lhs, rhs);
 }
 
@@ -119,7 +119,7 @@ struct Divide
 };
 
 template <typename Left, typename Right>
-BinaryOp<Divide, Left, Right> operator/ (Left lhs, Right rhs) {
+HD_INLINE BinaryOp<Divide, Left, Right> operator/ (Left lhs, Right rhs) {
     return BinaryOp<Divide, Left, Right>(lhs, rhs);
 }
 
@@ -142,7 +142,7 @@ struct Pow
 };
 
 template <int power, typename Arg>
-UnaryOp<Pow<power>, Arg> pow(Arg arg) {
+HD_INLINE UnaryOp<Pow<power>, Arg> pow(Arg arg) {
     return UnaryOp<Pow<power>, Arg>(arg);
 }
 
