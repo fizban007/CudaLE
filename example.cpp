@@ -5,9 +5,9 @@
 using namespace CudaLE;
 
 // #define MY_DECLARE_FUNCTOR_TYPE(a, b) typedef typeof(a) b
-#define DEFINE_FUNCTOR(NAME, FUNCTOR)      \
-    typedef typeof(FUNCTOR) type_ ## NAME; \
-    type_ ## NAME NAME
+// #define DEFINE_FUNCTOR(NAME, FUNCTOR)      \
+//     typedef typeof(FUNCTOR) type_ ## NAME; \
+//     type_ ## NAME NAME
 
 class FuncTest
 {
@@ -16,9 +16,9 @@ public:
     DEFINE_FUNCTOR(g, _1 * _2 * _2);
     DEFINE_FUNCTOR(h, pow<4>(_1));
 
-    FuncTest() : f(cos(3.0 * _1) + 3.0 * _2), 
-                 g(_1 * _2 * _2),
-                 h(pow<4>(_1))
+    FuncTest() : f(defaultValue_f()), 
+                 g(defaultValue_g()),
+                 h(defaultValue_h())
         {}
     virtual ~FuncTest() {}
 }; // ----- end of class FuncTest -----
