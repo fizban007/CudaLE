@@ -1,7 +1,6 @@
 #ifndef  _DERIVATIVE_H_
 #define  _DERIVATIVE_H_
 
-
 #include <math.h>
 #include "cudaControl.h"
 #include "Functions.h"
@@ -9,10 +8,25 @@
 namespace CudaLE {
 
 ////////////////////////////////////////////////////////////////////////////////
+///  Helper struct
+////////////////////////////////////////////////////////////////////////////////
+template<int> struct int2type{};
+
+////////////////////////////////////////////////////////////////////////////////
 ///  Forward declaration
 ////////////////////////////////////////////////////////////////////////////////
+
+// Generic single partial derivative class
 template <int Argument, typename Expr>
 struct Derivative;
+
+// Higher order partial derivative with respect to 1 argument
+template <int Argument, int times, typename Expr>
+struct Derivative_n;
+
+// Higher order partial derivative with respect to 2 arguments
+template <int Arg1, int n1, int Arg2, int n2, typename Expr>
+struct Derivative_2n;
 
 template <int Argument, int Arg2, typename Expr>
 HD_INLINE
@@ -49,9 +63,22 @@ HD_INLINE
 typename Derivative<Argument, double>::result_type
 D(const double& val);
 
+// Higher order derivatives
+template <int Argument, int times, typename Expr>
+HD_INLINE
+typename Derivative_n<Argument, times, Expr>::result_type
+D_n(const Expr& expr);
+
+template <int Arg1, int n1, int Arg2, int n2, typename Expr>
+HD_INLINE
+typename Derivative_2n<Arg1, n1, Arg2, n2, Expr>::result_type
+D_nm(const Expr& expr);
+
 ////////////////////////////////////////////////////////////////////////////////
 ///  Template classes
 ////////////////////////////////////////////////////////////////////////////////
+
+// Derivative of a derivative
 template <int Argument, int Arg2, typename Expr>
 struct Derivative<Argument, Derivative<Arg2, Expr> >
 {
@@ -66,6 +93,7 @@ struct Derivative<Argument, Derivative<Arg2, Expr> >
     }
 };
 
+// Derivative sum rule
 template <int Argument, typename Left, typename Right>
 struct Derivative<Argument, BinaryOp<Plus, Left, Right> >
 {
@@ -85,6 +113,7 @@ struct Derivative<Argument, BinaryOp<Plus, Left, Right> >
     }
 };
 
+// Derivative subtraction rule
 template <int Argument, typename Left, typename Right>
 struct Derivative<Argument, BinaryOp<Minus, Left, Right> >
 {
@@ -104,6 +133,7 @@ struct Derivative<Argument, BinaryOp<Minus, Left, Right> >
     }
 };
 
+// Derivative multiplication rule
 template <int Argument, typename Left, typename Right>
 struct Derivative<Argument, BinaryOp<Multiply, Left, Right> >
 {
@@ -124,7 +154,7 @@ struct Derivative<Argument, BinaryOp<Multiply, Left, Right> >
     }
 };
 
-
+// Derivative division rule
 template <int Argument, typename Left, typename Right>
 struct Derivative<Argument, BinaryOp<Divide, Left, Right> >
 {
@@ -149,6 +179,7 @@ struct Derivative<Argument, BinaryOp<Divide, Left, Right> >
     }
 };
 
+// Derivative of sin function
 template <int Argument, typename Arg>
 struct Derivative<Argument, UnaryOp<Sin, Arg> >
 {
@@ -165,6 +196,7 @@ struct Derivative<Argument, UnaryOp<Sin, Arg> >
     }
 };
 
+// Derivative of cos function
 template <int Argument, typename Arg>
 struct Derivative<Argument, UnaryOp<Cos, Arg> >
 {
@@ -181,6 +213,7 @@ struct Derivative<Argument, UnaryOp<Cos, Arg> >
     }
 };
 
+// Derivative of exponential function
 template <int Argument, typename Arg>
 struct Derivative<Argument, UnaryOp<Exp, Arg> >
 {
@@ -197,6 +230,7 @@ struct Derivative<Argument, UnaryOp<Exp, Arg> >
     }
 };
 
+// Derivative of logarithm function
 template <int Argument, typename Arg>
 struct Derivative<Argument, UnaryOp<Log, Arg> >
 {
@@ -212,6 +246,7 @@ struct Derivative<Argument, UnaryOp<Log, Arg> >
     }
 };
 
+// Derivative of an integer power function
 template <int Argument, int n, typename Arg>
 struct Derivative<Argument, UnaryOp<Pow<n>, Arg> >
 {
@@ -230,17 +265,18 @@ struct Derivative<Argument, UnaryOp<Pow<n>, Arg> >
     }
 };
 
+// Derivative of a constant
 template <int Argument>
 struct Derivative<Argument, ConstOp>
 {
     typedef ConstOp arg_type;
-    typedef double result_type;
+    typedef ConstOp result_type;
     result_type derivative;
 
     HOST_DEVICE Derivative() : derivative(0.0) {}
 
     HD_INLINE double operator() (double x1, double x2 = 0.0, double x3 = 0.0) {
-        return derivative;
+        return derivative(x1, x2, x3);
     }
 };
 
@@ -248,16 +284,17 @@ template <int Argument>
 struct Derivative<Argument, double>
 {
     typedef double arg_type;
-    typedef double result_type;
+    typedef ConstOp result_type;
     result_type derivative;
 
     HOST_DEVICE Derivative() : derivative(0.0) {}
 
     HD_INLINE double operator() (double x1, double x2 = 0.0, double x3 = 0.0) {
-        return derivative;
+        return derivative(x1, x2, x3);
     }
 };
 
+// Derivative of an independent variable, producing Kronicker delta
 template <int Argument, int var>
 struct Derivative<Argument, Var<var, double > >
 {
@@ -277,10 +314,104 @@ struct Derivative<Argument, Var<var, double > >
     }
 };
 
+// Multiple derivatives
+template <int Argument, int times, typename Expr>
+struct Derivative_n
+{
+    typedef Expr arg_type;
+    typedef typename Derivative<Argument, 
+                                typename Derivative_n<Argument, times - 1, Expr>::result_type>::result_type result_type;
+    result_type derivative;
+
+    HOST_DEVICE Derivative_n(arg_type expr) : derivative(D<Argument>(D_n<Argument, times - 1>(expr))) {
+    }
+    
+    HD_INLINE double operator() (double x1, double x2 = 0.0, double x3 = 0.0) {
+        return derivative(x1, x2, x3);
+    }
+};
+
+template <int Argument, typename Expr>
+struct Derivative_n<Argument, 1, Expr>
+{
+    typedef Expr arg_type;
+    typedef typename Derivative<Argument, Expr>::result_type result_type;
+    result_type derivative;
+
+    HOST_DEVICE Derivative_n(arg_type expr) : derivative(D<Argument>(expr)) {}
+    
+    HD_INLINE double operator() (double x1, double x2 = 0.0, double x3 = 0.0) {
+        return derivative(x1, x2, x3);
+    }
+};
+
+template <int Argument, typename Expr>
+struct Derivative_n<Argument, 0, Expr>
+{
+    typedef Expr arg_type;
+    typedef Expr result_type;
+    result_type derivative;
+
+    HOST_DEVICE Derivative_n(arg_type expr) : derivative(expr) {}
+    
+    HD_INLINE double operator() (double x1, double x2 = 0.0, double x3 = 0.0) {
+        return derivative(x1, x2, x3);
+    }
+};
+
+
+template <int Arg1, int n1, int Arg2, int n2, typename Expr>
+struct Derivative_2n
+{
+    typedef Expr arg_type;
+    typedef typename Derivative<Arg1, 
+                                typename Derivative_2n<Arg1, n1 - 1, Arg2, n2, Expr>::result_type>::result_type result_type;
+    result_type derivative;
+
+    HOST_DEVICE Derivative_2n(arg_type expr) : derivative(D<Arg1>(D_nm<Arg1, n1 - 1, Arg2, n2>(expr))) {}
+    
+    HD_INLINE double operator() (double x1, double x2 = 0.0, double x3 = 0.0) {
+        return derivative(x1, x2, x3);
+    }
+};
+
+template <int Arg1, int Arg2, int n2, typename Expr>
+struct Derivative_2n<Arg1, 1, Arg2, n2, Expr>
+{
+    typedef Expr arg_type;
+    typedef typename Derivative<Arg1, 
+                                typename Derivative_n<Arg2, n2, Expr>::result_type>::result_type result_type;
+    result_type derivative;
+
+    HOST_DEVICE Derivative_2n(arg_type expr) : derivative(D<Arg1>(D_n<Arg2, n2>(expr))) {}
+    
+    HD_INLINE double operator() (double x1, double x2 = 0.0, double x3 = 0.0) {
+        return derivative(x1, x2, x3);
+    }
+};
+
+template <int Arg1, int Arg2, int n2, typename Expr>
+struct Derivative_2n<Arg1, 0, Arg2, n2, Expr>
+{
+    typedef Expr arg_type;
+    typedef typename Derivative_n<Arg2, n2, Expr>::result_type result_type;
+    result_type derivative;
+
+    HOST_DEVICE Derivative_2n(arg_type expr) : derivative(D_n<Arg2, n2>(expr)) {}
+    
+    HD_INLINE double operator() (double x1, double x2 = 0.0, double x3 = 0.0) {
+        return derivative(x1, x2, x3);
+    }
+};
+
+////////////////////////////////////////////////////////////////////////////////
+///  Functions
+////////////////////////////////////////////////////////////////////////////////
 template <int Argument, typename Op, typename Left, typename Right>
 HD_INLINE
 typename Derivative<Argument, BinaryOp<Op, Left, Right> >::result_type 
 D(const BinaryOp<Op, Left, Right>& expr) {
+    // printf("Constructed derivative: %s\n", __PRETTY_FUNCTION__);
     return Derivative<Argument, BinaryOp<Op, Left, Right> >(expr.left, expr.right).derivative;
 }
 
@@ -333,7 +464,57 @@ D(const Derivative<Arg2, Expr>& deriv) {
     return D<Argument>(deriv.derivative);
 }
 
+template <int Argument, int times, typename Expr>
+HD_INLINE
+typename Derivative_n<Argument, times, Expr>::result_type
+D_n_imp(const Expr& expr, int2type<times> I) {
+    return D<Argument>(D_n_imp<Argument>(expr, int2type<times - 1>()));
+}
+
+template <int Argument, typename Expr>
+HD_INLINE
+typename Derivative<Argument, Expr>::result_type
+D_n_imp(const Expr& expr, int2type<1> I) {
+    return D<Argument>(expr);
+}
+
+template <int Argument, typename Expr>
+HD_INLINE
+Expr
+D_n_imp(const Expr& expr, int2type<0> I) {
+    return expr;
+}
+
+template <int Argument, int times, typename Expr>
+HD_INLINE
+typename Derivative_n<Argument, times, Expr>::result_type
+D_n(const Expr& expr) {
+    return D_n_imp<Argument>(expr, int2type<times>());
+}
+
+template <int Arg1, int n1, int Arg2, int n2, typename Expr>
+HD_INLINE
+typename Derivative_2n<Arg1, n1, Arg2, n2, Expr>::result_type
+D_nm_imp(const Expr& expr, int2type<n1> I, int2type<n2> J) {
+    return D<Arg1>(D_nm_imp<Arg1, n1 - 1, Arg2, n2>(expr, int2type<n1 - 1>(), int2type<n2>()));
+}
+
+template <int Arg1, int Arg2, int n2, typename Expr>
+HD_INLINE
+typename Derivative<Arg1, typename Derivative_n<Arg2, n2, Expr>::result_type>::result_type
+D_nm_imp(const Expr& expr, int2type<1> I, int2type<n2> J) {
+    return D<Arg1>(D_n<Arg2, n2>(expr));
+}
+
+template <int Arg1, int n1, int Arg2, int n2, typename Expr>
+HD_INLINE
+typename Derivative_2n<Arg1, n1, Arg2, n2, Expr>::result_type
+D_nm(const Expr& expr) {
+    return D_nm_imp<Arg1, n1, Arg2, n2>(expr, int2type<n1>(), int2type<n2>());
+}
+
 
 }
 
 #endif   // ----- #ifndef _DERIVATIVE_H_  ----- 
+
