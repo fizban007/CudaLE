@@ -22,7 +22,7 @@
 #ifndef DEFINE_FUNCTOR
 #define DEFINE_FUNCTOR(NAME, FUNCTOR)                    \
     private:                                             \
-    typedef typeof(FUNCTOR) NAME ## _type;               \
+    typedef __typeof__(FUNCTOR) NAME ## _type;               \
     NAME ## _type defaultValue_ ## NAME () {             \
         return FUNCTOR;                                  \
     }                                                    \
