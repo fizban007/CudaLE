@@ -146,6 +146,18 @@ HD_INLINE UnaryOp<Pow<power>, Arg> pow(Arg arg) {
     return UnaryOp<Pow<power>, Arg>(arg);
 }
 
+struct Sqrt
+{
+    HD_INLINE static double apply(double a) {
+        return sqrt(a);
+    }
+};
+
+template <typename Arg>
+HD_INLINE UnaryOp<Sqrt, Arg> sqrt(Arg arg) {
+    return UnaryOp<Sqrt, Arg>(arg);
+}
+
 }
 
 
