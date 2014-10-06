@@ -23,11 +23,8 @@
 #define DEFINE_FUNCTOR(NAME, FUNCTOR)                    \
     private:                                             \
     typedef __typeof__(FUNCTOR) NAME ## _type;               \
-    NAME ## _type defaultValue_ ## NAME () {             \
-        return FUNCTOR;                                  \
-    }                                                    \
 public:                                                  \
-NAME ## _type NAME                         
+NAME ## _type NAME = FUNCTOR                         
     
 #endif
 
