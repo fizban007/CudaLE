@@ -20,15 +20,12 @@
 #include "Derivative.h"
 
 #ifndef DEFINE_FUNCTOR
-  #define DEFINE_FUNCTOR(NAME, FUNCTOR)                    \
-      private:                                             \
-      typedef __typeof__(FUNCTOR) NAME ## _type;           \
-      NAME ## _type defaultValue_ ## NAME () {             \
-          return FUNCTOR;                                  \
-      }                                                    \
-      public:                                              \
-      NAME ## _type NAME                         
-
+#define DEFINE_FUNCTOR(NAME, FUNCTOR)                    \
+    private:                                             \
+    typedef __typeof__(FUNCTOR) NAME ## _type;               \
+public:                                                  \
+NAME ## _type NAME = FUNCTOR                         
+    
 #endif
 
 #endif   // ----- #ifndef _CUDALE_H_  ----- 

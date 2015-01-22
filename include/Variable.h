@@ -21,7 +21,7 @@ namespace CudaLE {
 template <int Argument, typename Data>
 struct Var
 {
-    HOST_DEVICE Data operator() (Data x1, Data x2 = 0.0, Data x3 = 0.0) {
+    HOST_DEVICE Data operator() (Data x1, Data x2 = 0.0, Data x3 = 0.0) const {
         if (1 == Argument)
             return x1;
         else if (2 == Argument)
