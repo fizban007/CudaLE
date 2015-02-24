@@ -18,24 +18,30 @@
 
 namespace CudaLE {
 
-template <int Argument, typename Data>
+template <int Argument, typename Data = double>
 struct Var
 {
-    HOST_DEVICE Data operator() (Data x1, Data x2 = 0.0, Data x3 = 0.0) const {
-        if (1 == Argument)
-            return x1;
-        else if (2 == Argument)
-            return x2;
-        else if (3 == Argument)
-            return x3;
-        else
-            return Data();
-    }
+  HOST_DEVICE Var() {}
+  HOST_DEVICE Var(int f) {}
+  HD_INLINE Data operator() (Data x1, Data x2 = 0.0, Data x3 = 0.0) const {
+    if (1 == Argument)
+      return x1;
+    else if (2 == Argument)
+      return x2;
+    else if (3 == Argument)
+      return x3;
+    else
+      return Data();
+  }
 };
 
-static Var<1, double> _1;
-static Var<2, double> _2;
-static Var<3, double> _3;
+// static Var<1, double> _1;
+// static Var<2, double> _2;
+// static Var<3, double> _3;
 }
+
+// #define _1 Var<1, double>()
+// #define _2 Var<2, double>()
+// #define _3 Var<3, double>()
 
 #endif   // ----- #ifndef _VARIABLE_H_  ----- 
