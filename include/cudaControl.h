@@ -23,6 +23,6 @@
   #ifdef WITH_CUDA_ENABLED
     #undef WITH_CUDA_ENABLED
   #endif
-#endif
+#endif   // ----- #ifdef __CUDACC__ -----
 
 #endif   // ----- #ifndef _CUDACONTROL_H_  ----- 
