@@ -88,7 +88,7 @@ struct Derivative<Argument, Derivative<Arg2, Expr> >
     
     HOST_DEVICE Derivative(arg_type expr) : derivative(D<Argument>(expr)) {}
     
-    HD_INLINE double operator() (double x1, double x2 = 0.0, double x3 = 0.0) {
+    HD_INLINE double operator() (double x1, double x2 = 0.0, double x3 = 0.0, double x4 = 0.0) {
         return derivative(x1, x2, x3);
     }
 };
@@ -108,7 +108,7 @@ struct Derivative<Argument, BinaryOp<Plus, Left, Right> >
     HOST_DEVICE Derivative(Left t1, Right t2) : derivative(D<Argument>(t1), D<Argument>(t2)) {}
     HOST_DEVICE Derivative(arg_type expr) : derivative(D<Argument>(expr.left), D<Argument>(expr.right)) {}
 
-    HD_INLINE double operator() (double x1, double x2 = 0.0, double x3 = 0.0) {
+    HD_INLINE double operator() (double x1, double x2 = 0.0, double x3 = 0.0, double x4 = 0.0) {
         return derivative(x1, x2, x3);
     }
 };
@@ -128,7 +128,7 @@ struct Derivative<Argument, BinaryOp<Minus, Left, Right> >
     HOST_DEVICE Derivative(arg_type expr) : derivative(D<Argument>(expr.left), D<Argument>(expr.right)) {}
     HOST_DEVICE Derivative() {}
 
-    HD_INLINE double operator() (double x1, double x2 = 0.0, double x3 = 0.0) {
+    HD_INLINE double operator() (double x1, double x2 = 0.0, double x3 = 0.0, double x4 = 0.0) {
         return derivative(x1, x2, x3);
     }
 };
@@ -149,7 +149,7 @@ struct Derivative<Argument, BinaryOp<Multiply, Left, Right> >
         derivative(expr.left * D<Argument>(expr.right), D<Argument>(expr.left) * expr.right) {}
     HOST_DEVICE Derivative() {}
 
-    HD_INLINE double operator() (double x1, double x2 = 0.0, double x3 = 0.0) {
+    HD_INLINE double operator() (double x1, double x2 = 0.0, double x3 = 0.0, double x4 = 0.0) {
         return derivative(x1, x2, x3);
     }
 };
@@ -174,7 +174,7 @@ struct Derivative<Argument, BinaryOp<Divide, Left, Right> >
 
     HOST_DEVICE Derivative() {}
 
-    HD_INLINE double operator() (double x1, double x2 = 0.0, double x3 = 0.0) {
+    HD_INLINE double operator() (double x1, double x2 = 0.0, double x3 = 0.0, double x4 = 0.0) {
         return derivative(x1, x2, x3);
     }
 };
@@ -191,7 +191,7 @@ struct Derivative<Argument, UnaryOp<Sin, Arg> >
     HOST_DEVICE Derivative(Arg arg) : derivative(cos(arg), D<Argument>(arg)) {}
     HOST_DEVICE Derivative(arg_type expr) : derivative(cos(expr.arg), D<Argument>(expr.arg)) {}
     
-    HD_INLINE double operator() (double x1, double x2 = 0.0, double x3 = 0.0) {
+    HD_INLINE double operator() (double x1, double x2 = 0.0, double x3 = 0.0, double x4 = 0.0) {
         return derivative(x1, x2, x3);
     }
 };
@@ -208,7 +208,7 @@ struct Derivative<Argument, UnaryOp<Cos, Arg> >
     HOST_DEVICE Derivative(Arg arg) : derivative(-1.0 * sin(arg), D<Argument>(arg)) {}
     HOST_DEVICE Derivative(arg_type expr) : derivative(-1.0 * sin(expr.arg), D<Argument>(expr.arg)) {}
     
-    HD_INLINE double operator() (double x1, double x2 = 0.0, double x3 = 0.0) {
+    HD_INLINE double operator() (double x1, double x2 = 0.0, double x3 = 0.0, double x4 = 0.0) {
         return derivative(x1, x2, x3);
     }
 };
@@ -225,7 +225,7 @@ struct Derivative<Argument, UnaryOp<Exp, Arg> >
     HOST_DEVICE Derivative(Arg arg) : derivative(exp(arg), D<Argument>(arg)) {}
     HOST_DEVICE Derivative(arg_type expr) : derivative(exp(expr.arg), D<Argument>(expr.arg)) {}
     
-    HD_INLINE double operator() (double x1, double x2 = 0.0, double x3 = 0.0) {
+    HD_INLINE double operator() (double x1, double x2 = 0.0, double x3 = 0.0, double x4 = 0.0) {
         return derivative(x1, x2, x3);
     }
 };
@@ -241,7 +241,7 @@ struct Derivative<Argument, UnaryOp<Log, Arg> >
     HOST_DEVICE Derivative(Arg arg) : derivative(D<Argument>(arg), arg) {}
     HOST_DEVICE Derivative(arg_type expr) : derivative(D<Argument>(expr.arg), expr.arg) {}
     
-    HD_INLINE double operator() (double x1, double x2 = 0.0, double x3 = 0.0) {
+    HD_INLINE double operator() (double x1, double x2 = 0.0, double x3 = 0.0, double x4 = 0.0) {
         return derivative(x1, x2, x3);
     }
 };
@@ -260,7 +260,7 @@ struct Derivative<Argument, UnaryOp<Pow<n>, Arg> >
     HOST_DEVICE Derivative(Arg arg) : derivative((double)n * D<Argument>(arg), pow<n-1>(arg)) {}
     HOST_DEVICE Derivative(arg_type expr) : derivative((double)n * D<Argument>(expr.arg), pow<n-1>(expr.arg)) {}
     
-    HD_INLINE double operator() (double x1, double x2 = 0.0, double x3 = 0.0) {
+    HD_INLINE double operator() (double x1, double x2 = 0.0, double x3 = 0.0, double x4 = 0.0) {
         return derivative(x1, x2, x3);
     }
 };
@@ -279,7 +279,7 @@ struct Derivative<Argument, UnaryOp<Sqrt, Arg> >
   HOST_DEVICE Derivative(Arg arg) : derivative(D<Argument>(arg), 2.0 * sqrt(arg)) {}
     HOST_DEVICE Derivative(arg_type expr) : derivative(D<Argument>(expr.arg), 2.0 * sqrt(expr.arg)) {}
     
-    HD_INLINE double operator() (double x1, double x2 = 0.0, double x3 = 0.0) {
+    HD_INLINE double operator() (double x1, double x2 = 0.0, double x3 = 0.0, double x4 = 0.0) {
         return derivative(x1, x2, x3);
     }
 };
@@ -294,7 +294,7 @@ struct Derivative<Argument, ConstOp>
 
     HOST_DEVICE Derivative() : derivative(0.0) {}
 
-    HD_INLINE double operator() (double x1, double x2 = 0.0, double x3 = 0.0) {
+    HD_INLINE double operator() (double x1, double x2 = 0.0, double x3 = 0.0, double x4 = 0.0) {
         return derivative(x1, x2, x3);
     }
 };
@@ -308,7 +308,7 @@ struct Derivative<Argument, double>
 
     HOST_DEVICE Derivative() : derivative(0.0) {}
 
-    HD_INLINE double operator() (double x1, double x2 = 0.0, double x3 = 0.0) {
+    HD_INLINE double operator() (double x1, double x2 = 0.0, double x3 = 0.0, double x4 = 0.0) {
         return derivative(x1, x2, x3);
     }
 };
@@ -328,7 +328,7 @@ struct Derivative<Argument, Var<var, double > >
             derivative = ConstOp(0.0);
     }
     
-    HD_INLINE double operator() (double x1, double x2 = 0.0, double x3 = 0.0) {
+    HD_INLINE double operator() (double x1, double x2 = 0.0, double x3 = 0.0, double x4 = 0.0) {
         return derivative(x1, x2, x3);
     }
 };
@@ -345,7 +345,7 @@ struct Derivative_n
     HOST_DEVICE Derivative_n(arg_type expr) : derivative(D<Argument>(D_n<Argument, times - 1>(expr))) {
     }
     
-    HD_INLINE double operator() (double x1, double x2 = 0.0, double x3 = 0.0) {
+    HD_INLINE double operator() (double x1, double x2 = 0.0, double x3 = 0.0, double x4 = 0.0) {
         return derivative(x1, x2, x3);
     }
 };
@@ -359,7 +359,7 @@ struct Derivative_n<Argument, 1, Expr>
 
     HOST_DEVICE Derivative_n(arg_type expr) : derivative(D<Argument>(expr)) {}
     
-    HD_INLINE double operator() (double x1, double x2 = 0.0, double x3 = 0.0) {
+    HD_INLINE double operator() (double x1, double x2 = 0.0, double x3 = 0.0, double x4 = 0.0) {
         return derivative(x1, x2, x3);
     }
 };
@@ -373,7 +373,7 @@ struct Derivative_n<Argument, 0, Expr>
 
     HOST_DEVICE Derivative_n(arg_type expr) : derivative(expr) {}
     
-    HD_INLINE double operator() (double x1, double x2 = 0.0, double x3 = 0.0) {
+    HD_INLINE double operator() (double x1, double x2 = 0.0, double x3 = 0.0, double x4 = 0.0) {
         return derivative(x1, x2, x3);
     }
 };
@@ -389,7 +389,7 @@ struct Derivative_2n
 
     HOST_DEVICE Derivative_2n(arg_type expr) : derivative(D<Arg1>(D_nm<Arg1, n1 - 1, Arg2, n2>(expr))) {}
     
-    HD_INLINE double operator() (double x1, double x2 = 0.0, double x3 = 0.0) {
+    HD_INLINE double operator() (double x1, double x2 = 0.0, double x3 = 0.0, double x4 = 0.0) {
         return derivative(x1, x2, x3);
     }
 };
@@ -404,7 +404,7 @@ struct Derivative_2n<Arg1, 1, Arg2, n2, Expr>
 
     HOST_DEVICE Derivative_2n(arg_type expr) : derivative(D<Arg1>(D_n<Arg2, n2>(expr))) {}
     
-    HD_INLINE double operator() (double x1, double x2 = 0.0, double x3 = 0.0) {
+    HD_INLINE double operator() (double x1, double x2 = 0.0, double x3 = 0.0, double x4 = 0.0) {
         return derivative(x1, x2, x3);
     }
 };
@@ -418,7 +418,7 @@ struct Derivative_2n<Arg1, 0, Arg2, n2, Expr>
 
     HOST_DEVICE Derivative_2n(arg_type expr) : derivative(D_n<Arg2, n2>(expr)) {}
     
-    HD_INLINE double operator() (double x1, double x2 = 0.0, double x3 = 0.0) {
+    HD_INLINE double operator() (double x1, double x2 = 0.0, double x3 = 0.0, double x4 = 0.0) {
         return derivative(x1, x2, x3);
     }
 };

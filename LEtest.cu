@@ -11,7 +11,7 @@ using namespace CudaLE;
 // const Coordinate Type type = COORD_CYLINDRICAL;
 // struct ScaleFuncBase
 // {
-//     HOST_DEVICE virtual double operator() (double x1, double x2 = 0.0, double x3 = 0.0) = 0;
+//     HOST_DEVICE virtual double operator() (double x1, double x2 = 0.0, double x3 = 0.0, double x4 = 0.0) = 0;
 //     HOST_DEVICE virtual ~ScaleFuncBase() {}
 // };
 
@@ -21,7 +21,7 @@ using namespace CudaLE;
 // {
 //     Func h;
 //     HOST_DEVICE ScaleFunc (Func func) : h(func) {}
-//     HOST_DEVICE virtual double operator() (double x1, double x2 = 0.0, double x3 = 0.0) {
+//     HOST_DEVICE virtual double operator() (double x1, double x2 = 0.0, double x3 = 0.0, double x4 = 0.0) {
 //         return h(x1, x2);
 //     }
 //     HOST_DEVICE virtual ~ScaleFunc() {}
@@ -30,7 +30,7 @@ using namespace CudaLE;
 // template <typename F>
 // struct Finvoke
 // {
-//     HOST_DEVICE static double invoke (F func, double x1, double x2, double x3) {
+//     HOST_DEVICE static double invoke (F func, double x1, double x2, double x3, double x4 = 0.0) {
 //         F f(func);
 //         return f(x1, x2, x3);
 //     }
@@ -38,7 +38,7 @@ using namespace CudaLE;
 
 struct FunctionBase
 {
-    HOST_DEVICE virtual double operator() (double x1, double x2 = 0.0, double x3 = 0.0) = 0;
+    HOST_DEVICE virtual double operator() (double x1, double x2 = 0.0, double x3 = 0.0, double x4 = 0.0) = 0;
     HOST_DEVICE virtual ~FunctionBase() {}
     // template<typename F>
     // F getFunc(FunctionBase*);
@@ -49,7 +49,7 @@ struct Function : public FunctionBase
 {
     F f;
     HOST_DEVICE Function(F func) : f(func) {}
-    HOST_DEVICE virtual double operator() (double x1, double x2 = 0.0, double x3 = 0.0) {
+    HOST_DEVICE virtual double operator() (double x1, double x2 = 0.0, double x3 = 0.0, double x4 = 0.0) {
         return f(x1, x2, x3);
     }
     HOST_DEVICE virtual ~Function() {}
@@ -85,7 +85,7 @@ struct Function : public FunctionBase
 // template <typename F>
 // struct Invoker
 // {
-//     HOST_DEVICE static double invoke(function_buffer& functor, double x1, double x2, double x3) {
+//     HOST_DEVICE static double invoke(function_buffer& functor, double x1, double x2, double x3, double x4 = 0.0) {
 //         F* f;
 //         f = reinterpret_cast<F*>(functor.f);
 //         return (*f)(x1, x2, x3);
@@ -137,7 +137,7 @@ struct Function : public FunctionBase
 //         assign(func);
 //     }
 
-//     HOST_DEVICE double operator() (double x1, double x2 = 0.0, double x3 = 0.0) {
+//     HOST_DEVICE double operator() (double x1, double x2 = 0.0, double x3 = 0.0, double x4 = 0.0) {
 //         return vtable_ -> invoker(functor, x1, x2, x3);
 //     }
 

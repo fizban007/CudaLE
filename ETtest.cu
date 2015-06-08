@@ -16,7 +16,7 @@ struct BinaryOp
     Right right;
     HOST_DEVICE BinaryOp(Left t1, Right t2) : left(t1), right(t2) {}
     
-    HOST_DEVICE double operator() (double x1, double x2 = 0.0, double x3 = 0.0) {
+    HOST_DEVICE double operator() (double x1, double x2 = 0.0, double x3 = 0.0, double x4 = 0.0) {
         return Op::apply(left(x1, x2, x3), right(x1, x2, x3));
     }
 };
@@ -27,7 +27,7 @@ struct UnaryOp
     Arg arg;
     HOST_DEVICE UnaryOp(Arg t1) : arg(t1) {}
     
-    HOST_DEVICE double operator() (double x1, double x2 = 0.0, double x3 = 0.0) {
+    HOST_DEVICE double operator() (double x1, double x2 = 0.0, double x3 = 0.0, double x4 = 0.0) {
         return Op::apply(arg(x1, x2, x3));
     }
 };
@@ -36,7 +36,7 @@ template <int argnum>
 struct Var
 {
     HOST_DEVICE Var() {}
-    HOST_DEVICE double operator() (double x1, double x2 = 0.0, double x3 = 0.0) {
+    HOST_DEVICE double operator() (double x1, double x2 = 0.0, double x3 = 0.0, double x4 = 0.0) {
         if (1 == argnum) return x1;
         else if (2 == argnum) return x2;
         else return x3;
