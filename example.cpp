@@ -4,6 +4,8 @@
 
 using namespace CudaLE;
 
+using namespace CudaLE::placeholders;
+
 // #define MY_DECLARE_FUNCTOR_TYPE(a, b) typedef typeof(a) b
 // #define DEFINE_FUNCTOR(NAME, FUNCTOR)      \
 //     typedef typeof(FUNCTOR) type_ ## NAME; \

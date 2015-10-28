@@ -37,10 +37,14 @@ struct Var
   }
 };
 
+namespace placeholders {
+
 static Var<1, double> _1;
 static Var<2, double> _2;
 static Var<3, double> _3;
 static Var<4, double> _4;
+
+}
 
 }
 
