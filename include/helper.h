@@ -21,7 +21,7 @@ namespace CudaLE {
 
 namespace helper {
 
-void print(const char* str) {
+HD_INLINE void print(const char* str) {
 #ifdef WITH_CUDA_ENABLED
   printf("%s", str);
 #else
@@ -29,7 +29,7 @@ void print(const char* str) {
 #endif
 }
 
-void print(double d) {
+HD_INLINE void print(double d) {
 #ifdef WITH_CUDA_ENABLED
   printf("%f", d);
 #else
@@ -38,7 +38,7 @@ void print(double d) {
 }
 
 template <typename T>
-void println(const T& t) {
+HD_INLINE void println(const T& t) {
   t.print();
   print("\n");
 }
