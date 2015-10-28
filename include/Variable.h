@@ -15,6 +15,7 @@
 #define  _VARIABLE_H_
 
 #include "cudaControl.h"
+#include "helper.h"
 
 namespace CudaLE {
 
@@ -34,6 +35,19 @@ struct Var
       return x4;
     else
       return Data();
+  }
+
+  HD_INLINE void print() const {
+    if (1 == Argument)
+      helper::print("x1");
+    else if (2 == Argument)
+      helper::print("x2");
+    else if (3 == Argument)
+      helper::print("x3");
+    else if (4 == Argument)
+      helper::print("x4");
+    else
+      helper::print("");
   }
 };
 
