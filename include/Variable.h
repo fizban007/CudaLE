@@ -58,6 +58,18 @@ static Var<2, double> _2;
 static Var<3, double> _3;
 static Var<4, double> _4;
 
+namespace cartesian {
+static Var<1, double> _x;
+static Var<2, double> _y;
+static Var<3, double> _z;
+}
+
+namespace spherical {
+static Var<1, double> _r;
+static Var<2, double> _theta;
+static Var<3, double> _phi;
+}
+
 }
 
 }
