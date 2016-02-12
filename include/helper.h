@@ -16,6 +16,7 @@
 #define  _HELPER_H_
 
 #include <iostream>
+#include "cudaControl.h"
 
 namespace CudaLE {
 

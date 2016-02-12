@@ -23,7 +23,6 @@ template <int Argument, typename Data = double>
 struct Var
 {
   HOST_DEVICE Var() {}
-  HOST_DEVICE Var(int f) {}
   HD_INLINE Data operator() (Data x1, Data x2 = 0.0, Data x3 = 0.0, Data x4 = 0.0) const {
     if (1 == Argument)
       return x1;

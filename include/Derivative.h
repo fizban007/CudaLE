@@ -4,6 +4,7 @@
 #include <math.h>
 #include "cudaControl.h"
 #include "Functions.h"
+#include "Variable.h"
 
 namespace CudaLE {
 
@@ -25,8 +26,8 @@ template <int Argument, int times, typename Expr>
 struct Derivative_n;
 
 // Higher order partial derivative with respect to 2 arguments
-template <int Arg1, int n1, int Arg2, int n2, typename Expr>
-struct Derivative_2n;
+// template <int Arg1, int n1, int Arg2, int n2, typename Expr>
+// struct Derivative_2n;
 
 template <int Argument, int Arg2, typename Expr>
 HD_INLINE
@@ -69,10 +70,10 @@ HD_INLINE
 typename Derivative_n<Argument, times, Expr>::result_type
 D_n(const Expr& expr);
 
-template <int Arg1, int n1, int Arg2, int n2, typename Expr>
-HD_INLINE
-typename Derivative_2n<Arg1, n1, Arg2, n2, Expr>::result_type
-D_nm(const Expr& expr);
+// template <int Arg1, int n1, int Arg2, int n2, typename Expr>
+// HD_INLINE
+// typename Derivative_2n<Arg1, n1, Arg2, n2, Expr>::result_type
+// D_nm(const Expr& expr);
 
 ////////////////////////////////////////////////////////////////////////////////
 ///  Template classes
@@ -379,49 +380,49 @@ struct Derivative_n<Argument, 0, Expr>
 };
 
 
-template <int Arg1, int n1, int Arg2, int n2, typename Expr>
-struct Derivative_2n
-{
-    typedef Expr arg_type;
-    typedef typename Derivative<Arg1, 
-                                typename Derivative_2n<Arg1, n1 - 1, Arg2, n2, Expr>::result_type>::result_type result_type;
-    result_type derivative;
+// template <int Arg1, int n1, int Arg2, int n2, typename Expr>
+// struct Derivative_2n
+// {
+//     typedef Expr arg_type;
+//     typedef typename Derivative<Arg1, 
+//                                 typename Derivative_2n<Arg1, n1 - 1, Arg2, n2, Expr>::result_type>::result_type result_type;
+//     result_type derivative;
 
-    HOST_DEVICE Derivative_2n(arg_type expr) : derivative(D<Arg1>(D_nm<Arg1, n1 - 1, Arg2, n2>(expr))) {}
+//     HOST_DEVICE Derivative_2n(arg_type expr) : derivative(D<Arg1>(D_nm<Arg1, n1 - 1, Arg2, n2>(expr))) {}
     
-    HD_INLINE double operator() (double x1, double x2 = 0.0, double x3 = 0.0, double x4 = 0.0) {
-        return derivative(x1, x2, x3, x4);
-    }
-};
+//     HD_INLINE double operator() (double x1, double x2 = 0.0, double x3 = 0.0, double x4 = 0.0) {
+//         return derivative(x1, x2, x3, x4);
+//     }
+// };
 
-template <int Arg1, int Arg2, int n2, typename Expr>
-struct Derivative_2n<Arg1, 1, Arg2, n2, Expr>
-{
-    typedef Expr arg_type;
-    typedef typename Derivative<Arg1, 
-                                typename Derivative_n<Arg2, n2, Expr>::result_type>::result_type result_type;
-    result_type derivative;
+// template <int Arg1, int Arg2, int n2, typename Expr>
+// struct Derivative_2n<Arg1, 1, Arg2, n2, Expr>
+// {
+//     typedef Expr arg_type;
+//     typedef typename Derivative<Arg1, 
+//                                 typename Derivative_n<Arg2, n2, Expr>::result_type>::result_type result_type;
+//     result_type derivative;
 
-    HOST_DEVICE Derivative_2n(arg_type expr) : derivative(D<Arg1>(D_n<Arg2, n2>(expr))) {}
+//     HOST_DEVICE Derivative_2n(arg_type expr) : derivative(D<Arg1>(D_n<Arg2, n2>(expr))) {}
     
-    HD_INLINE double operator() (double x1, double x2 = 0.0, double x3 = 0.0, double x4 = 0.0) {
-        return derivative(x1, x2, x3, x4);
-    }
-};
+//     HD_INLINE double operator() (double x1, double x2 = 0.0, double x3 = 0.0, double x4 = 0.0) {
+//         return derivative(x1, x2, x3, x4);
+//     }
+// };
 
-template <int Arg1, int Arg2, int n2, typename Expr>
-struct Derivative_2n<Arg1, 0, Arg2, n2, Expr>
-{
-    typedef Expr arg_type;
-    typedef typename Derivative_n<Arg2, n2, Expr>::result_type result_type;
-    result_type derivative;
+// template <int Arg1, int Arg2, int n2, typename Expr>
+// struct Derivative_2n<Arg1, 0, Arg2, n2, Expr>
+// {
+//     typedef Expr arg_type;
+//     typedef typename Derivative_n<Arg2, n2, Expr>::result_type result_type;
+//     result_type derivative;
 
-    HOST_DEVICE Derivative_2n(arg_type expr) : derivative(D_n<Arg2, n2>(expr)) {}
+//     HOST_DEVICE Derivative_2n(arg_type expr) : derivative(D_n<Arg2, n2>(expr)) {}
     
-    HD_INLINE double operator() (double x1, double x2 = 0.0, double x3 = 0.0, double x4 = 0.0) {
-        return derivative(x1, x2, x3, x4);
-    }
-};
+//     HD_INLINE double operator() (double x1, double x2 = 0.0, double x3 = 0.0, double x4 = 0.0) {
+//         return derivative(x1, x2, x3, x4);
+//     }
+// };
 
 ////////////////////////////////////////////////////////////////////////////////
 ///  Functions
@@ -511,26 +512,26 @@ D_n(const Expr& expr) {
     return D_n_imp<Argument>(expr, int2type<times>());
 }
 
-template <int Arg1, int n1, int Arg2, int n2, typename Expr>
-HD_INLINE
-typename Derivative_2n<Arg1, n1, Arg2, n2, Expr>::result_type
-D_nm_imp(const Expr& expr, int2type<n1> I, int2type<n2> J) {
-    return D<Arg1>(D_nm_imp<Arg1, n1 - 1, Arg2, n2>(expr, int2type<n1 - 1>(), int2type<n2>()));
-}
+// template <int Arg1, int n1, int Arg2, int n2, typename Expr>
+// HD_INLINE
+// typename Derivative_2n<Arg1, n1, Arg2, n2, Expr>::result_type
+// D_nm_imp(const Expr& expr, int2type<n1> I, int2type<n2> J) {
+//     return D<Arg1>(D_nm_imp<Arg1, n1 - 1, Arg2, n2>(expr, int2type<n1 - 1>(), int2type<n2>()));
+// }
 
-template <int Arg1, int Arg2, int n2, typename Expr>
-HD_INLINE
-typename Derivative<Arg1, typename Derivative_n<Arg2, n2, Expr>::result_type>::result_type
-D_nm_imp(const Expr& expr, int2type<1> I, int2type<n2> J) {
-    return D<Arg1>(D_n<Arg2, n2>(expr));
-}
+// template <int Arg1, int Arg2, int n2, typename Expr>
+// HD_INLINE
+// typename Derivative<Arg1, typename Derivative_n<Arg2, n2, Expr>::result_type>::result_type
+// D_nm_imp(const Expr& expr, int2type<1> I, int2type<n2> J) {
+//     return D<Arg1>(D_n<Arg2, n2>(expr));
+// }
 
-template <int Arg1, int n1, int Arg2, int n2, typename Expr>
-HD_INLINE
-typename Derivative_2n<Arg1, n1, Arg2, n2, Expr>::result_type
-D_nm(const Expr& expr) {
-    return D_nm_imp<Arg1, n1, Arg2, n2>(expr, int2type<n1>(), int2type<n2>());
-}
+// template <int Arg1, int n1, int Arg2, int n2, typename Expr>
+// HD_INLINE
+// typename Derivative_2n<Arg1, n1, Arg2, n2, Expr>::result_type
+// D_nm(const Expr& expr) {
+//     return D_nm_imp<Arg1, n1, Arg2, n2>(expr, int2type<n1>(), int2type<n2>());
+// }
 
 
 }

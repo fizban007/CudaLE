@@ -69,11 +69,11 @@ struct BinaryOp<Op, Left, double>
   HOST_DEVICE BinaryOp(Left t1, double t2) : left(t1), right(ConstOp(t2)) {}
   HOST_DEVICE BinaryOp(const type& op) : left(op.left), right(op.right) {}
   HOST_DEVICE BinaryOp() {}
-        
+
   HD_INLINE double operator() (double x1, double x2 = 0.0, double x3 = 0.0, double x4 = 0.0) const {
     return Op::apply(left(x1, x2, x3, x4), right(x1, x2, x3, x4));
   }
-  
+
   HD_INLINE void print() const {
     helper::print("(");
     left.print();
@@ -93,11 +93,11 @@ struct BinaryOp<Op, double, Right>
   HOST_DEVICE BinaryOp(double t1, Right t2) : left(ConstOp(t1)), right(t2) {}
   HOST_DEVICE BinaryOp(const type& op) : left(op.left), right(op.right) {}
   HOST_DEVICE BinaryOp() {}
-        
+
   HD_INLINE double operator() (double x1, double x2 = 0.0, double x3 = 0.0, double x4 = 0.0) const {
     return Op::apply(left(x1, x2, x3, x4), right(x1, x2, x3, x4));
   }
-  
+
   HD_INLINE void print() const {
     helper::print("(");
     left.print();
@@ -165,7 +165,7 @@ struct UnaryOp
   HD_INLINE double operator() (double x1, double x2 = 0.0, double x3 = 0.0, double x4 = 0.0) const {
     return Op::apply(arg(x1, x2, x3, x4));
   }
-  
+
   HD_INLINE void print() const {
     Op::print();
     helper::print("(");
@@ -187,7 +187,6 @@ struct UnaryOp
 //         return Op::apply((*arg)(x1, x2, x3, x4));
 //     }
 // };
-    
 }
 
 #endif   // ----- #ifndef _OPERATORS_H_  ----- 
