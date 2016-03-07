@@ -14,6 +14,7 @@
 #ifndef  _OPERATORS_H_
 #define  _OPERATORS_H_
 
+#include <type_traits>
 #include "cudaControl.h"
 #include "helper.h"
 
@@ -21,6 +22,8 @@ namespace CudaLE {
 
 struct ConstOp
 {
+  typedef ConstOp type;
+
   double val;
   HOST_DEVICE ConstOp(double v) : val(v) {}
   HOST_DEVICE ConstOp(const ConstOp& op) : val(op.val) {}
@@ -28,6 +31,34 @@ struct ConstOp
 
   HD_INLINE double operator() (double x1, double x2 = 0.0, double x3 = 0.0, double x4 = 0.0) const {
     return val;
+  }
+
+  template <typename T>
+  HD_INLINE
+  typename std::enable_if<std::is_same<T, type>::value, bool>::type
+  operator== (const T& obj) const {
+    return obj.val == val;
+  }
+
+  template <typename T>
+  HD_INLINE
+  typename std::enable_if<std::is_same<T, type>::value == false, bool>::type
+  operator== (const T& obj) const {
+    return false;
+  }
+
+  template <typename T>
+  HD_INLINE
+  typename std::enable_if<std::is_same<T, type>::value, bool>::type
+  operator!= (const T& obj) const {
+    return (val != obj.val);
+  }
+
+  template <typename T>
+  HD_INLINE
+  typename std::enable_if<std::is_same<T, type>::value == false, bool>::type
+  operator!= (const T& obj) const {
+    return true;
   }
 
   HD_INLINE void print() const {
@@ -48,6 +79,34 @@ struct BinaryOp
 
   HD_INLINE double operator() (double x1, double x2 = 0.0, double x3 = 0.0, double x4 = 0.0) const {
     return Op::apply(left(x1, x2, x3, x4), right(x1, x2, x3, x4));
+  }
+
+  template <typename T>
+  HD_INLINE
+  typename std::enable_if<std::is_same<T, type>::value, bool>::type
+  operator== (const T& obj) const {
+    return ((left == obj.left) && (right == obj.right));
+  }
+
+  template <typename T>
+  HD_INLINE
+  typename std::enable_if<std::is_same<T, type>::value == false, bool>::type
+  operator== (const T& obj) const {
+    return false;
+  }
+
+  template <typename T>
+  HD_INLINE
+  typename std::enable_if<std::is_same<T, type>::value, bool>::type
+  operator!= (const T& obj) const {
+    return (!operator==(obj));
+  }
+
+  template <typename T>
+  HD_INLINE
+  typename std::enable_if<std::is_same<T, type>::value == false, bool>::type
+  operator!= (const T& obj) const {
+    return true;
   }
 
   HD_INLINE void print() const {
@@ -74,6 +133,34 @@ struct BinaryOp<Op, Left, double>
     return Op::apply(left(x1, x2, x3, x4), right(x1, x2, x3, x4));
   }
 
+  template <typename T>
+  HD_INLINE
+  typename std::enable_if<std::is_same<T, type>::value, bool>::type
+  operator== (const T& obj) const {
+    return ((left == obj.left) && (right == obj.right));
+  }
+
+  template <typename T>
+  HD_INLINE
+  typename std::enable_if<std::is_same<T, type>::value == false, bool>::type
+  operator== (const T& obj) const {
+    return false;
+  }
+
+  template <typename T>
+  HD_INLINE
+  typename std::enable_if<std::is_same<T, type>::value, bool>::type
+  operator!= (const T& obj) const {
+    return (!operator==(obj));
+  }
+
+  template <typename T>
+  HD_INLINE
+  typename std::enable_if<std::is_same<T, type>::value == false, bool>::type
+  operator!= (const T& obj) const {
+    return true;
+  }
+
   HD_INLINE void print() const {
     helper::print("(");
     left.print();
@@ -96,6 +183,34 @@ struct BinaryOp<Op, double, Right>
 
   HD_INLINE double operator() (double x1, double x2 = 0.0, double x3 = 0.0, double x4 = 0.0) const {
     return Op::apply(left(x1, x2, x3, x4), right(x1, x2, x3, x4));
+  }
+
+  template <typename T>
+  HD_INLINE
+  typename std::enable_if<std::is_same<T, type>::value, bool>::type
+  operator== (const T& obj) const {
+    return ((left == obj.left) && (right == obj.right));
+  }
+
+  template <typename T>
+  HD_INLINE
+  typename std::enable_if<std::is_same<T, type>::value == false, bool>::type
+  operator== (const T& obj) const {
+    return false;
+  }
+
+  template <typename T>
+  HD_INLINE
+  typename std::enable_if<std::is_same<T, type>::value, bool>::type
+  operator!= (const T& obj) const {
+    return (!operator==(obj));
+  }
+
+  template <typename T>
+  HD_INLINE
+  typename std::enable_if<std::is_same<T, type>::value == false, bool>::type
+  operator!= (const T& obj) const {
+    return true;
   }
 
   HD_INLINE void print() const {
@@ -164,6 +279,34 @@ struct UnaryOp
 
   HD_INLINE double operator() (double x1, double x2 = 0.0, double x3 = 0.0, double x4 = 0.0) const {
     return Op::apply(arg(x1, x2, x3, x4));
+  }
+
+  template <typename T>
+  HD_INLINE
+  typename std::enable_if<std::is_same<T, type>::value, bool>::type
+  operator== (const T& obj) const {
+    return (arg == obj.arg);
+  }
+
+  template <typename T>
+  HD_INLINE
+  typename std::enable_if<std::is_same<T, type>::value == false, bool>::type
+  operator== (const T& obj) const {
+    return false;
+  }
+
+  template <typename T>
+  HD_INLINE
+  typename std::enable_if<std::is_same<T, type>::value, bool>::type
+  operator!= (const T& obj) const {
+    return (!operator==(obj));
+  }
+
+  template <typename T>
+  HD_INLINE
+  typename std::enable_if<std::is_same<T, type>::value == false, bool>::type
+  operator!= (const T& obj) const {
+    return true;
   }
 
   HD_INLINE void print() const {

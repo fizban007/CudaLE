@@ -14,6 +14,7 @@
 #ifndef  _VARIABLE_H_
 #define  _VARIABLE_H_
 
+#include <type_traits>
 #include "cudaControl.h"
 #include "helper.h"
 
@@ -22,6 +23,8 @@ namespace CudaLE {
 template <int Argument, typename Data = double>
 struct Var
 {
+  typedef Var<Argument, Data> type;
+
   HOST_DEVICE Var() {}
   HD_INLINE Data operator() (Data x1, Data x2 = 0.0, Data x3 = 0.0, Data x4 = 0.0) const {
     if (1 == Argument)
@@ -34,6 +37,25 @@ struct Var
       return x4;
     else
       return Data();
+  }
+
+  template <typename T>
+  HD_INLINE
+  bool
+  operator== (const T& obj) const {
+    return false;
+  }
+
+  template <typename T>
+  HD_INLINE
+  typename std::enable_if<std::is_same<T, type>::value, bool>::type
+  operator== (const T& obj) const {
+    return true;
+  }
+
+  template <typename T>
+  HD_INLINE bool operator!= (const T& obj) const {
+    return (!operator==(obj));
   }
 
   HD_INLINE void print() const {
