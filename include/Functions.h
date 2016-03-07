@@ -201,6 +201,22 @@ HD_INLINE UnaryOp<Sqrt, Arg> sqrt(Arg arg) {
   return UnaryOp<Sqrt, Arg>(arg);
 }
 
+struct Square
+{
+  HD_INLINE static double apply(double a) {
+    return a * a;
+  }
+
+  HD_INLINE static void print() {
+    helper::print("square");
+  }
+};
+
+template <typename Arg>
+HD_INLINE UnaryOp<Square, Arg> square(Arg arg) {
+  return UnaryOp<Square, Arg>(arg);
+}
+
 }
 
 
