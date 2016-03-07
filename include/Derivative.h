@@ -266,6 +266,25 @@ struct Derivative<Argument, UnaryOp<Pow<n>, Arg> >
     }
 };
 
+// Derivative of square
+template <int Argument, typename Arg>
+struct Derivative<Argument, UnaryOp<Square, Arg> >
+{
+  typedef UnaryOp<Square, Arg> arg_type;
+  typedef BinaryOp<Multiply, 
+                   BinaryOp<Multiply, double, typename Derivative<Argument, Arg>::result_type>
+                   , Arg > 
+      result_type;
+  result_type derivative;
+    
+  HOST_DEVICE Derivative(Arg arg) : derivative(2.0 * D<Argument>(arg), arg) {}
+  HOST_DEVICE Derivative(arg_type expr) : derivative(2.0 * D<Argument>(expr.arg), expr.arg) {}
+    
+  HD_INLINE double operator() (double x1, double x2 = 0.0, double x3 = 0.0, double x4 = 0.0) {
+    return derivative(x1, x2, x3, x4);
+  }
+};
+
 // Derivative of square root function
 template <int Argument, typename Arg>
 struct Derivative<Argument, UnaryOp<Sqrt, Arg> >
