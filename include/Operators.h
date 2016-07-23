@@ -20,6 +20,48 @@
 
 namespace CudaLE {
 
+struct ZeroOp
+{
+  typedef ZeroOp type;
+  HOST_DEVICE ZeroOp() {}
+
+  HD_INLINE double operator() (double x1, double x2 = 0.0, double x3 = 0.0, double x4 = 0.0) const {
+    return 0.0;
+  }
+
+  template <typename T>
+  HD_INLINE
+  typename std::enable_if<std::is_same<T, type>::value, bool>::type
+  operator== (const T& obj) const {
+    return true;
+  }
+
+  template <typename T>
+  HD_INLINE
+  typename std::enable_if<std::is_same<T, type>::value == false, bool>::type
+  operator== (const T& obj) const {
+    return false;
+  }
+
+  template <typename T>
+  HD_INLINE
+  typename std::enable_if<std::is_same<T, type>::value, bool>::type
+  operator!= (const T& obj) const {
+    return false;
+  }
+
+  template <typename T>
+  HD_INLINE
+  typename std::enable_if<std::is_same<T, type>::value == false, bool>::type
+  operator!= (const T& obj) const {
+    return true;
+  }
+
+  HD_INLINE void print() const {
+    helper::print(0.0);
+  }
+};
+
 struct ConstOp
 {
   typedef ConstOp type;

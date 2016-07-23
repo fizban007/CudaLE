@@ -309,10 +309,10 @@ template <int Argument>
 struct Derivative<Argument, ConstOp>
 {
     typedef ConstOp arg_type;
-    typedef ConstOp result_type;
+    typedef ZeroOp result_type;
     result_type derivative;
 
-    HOST_DEVICE Derivative() : derivative(0.0) {}
+    HOST_DEVICE Derivative() : derivative() {}
 
     HD_INLINE double operator() (double x1, double x2 = 0.0, double x3 = 0.0, double x4 = 0.0) {
         return derivative(x1, x2, x3, x4);
@@ -323,14 +323,28 @@ template <int Argument>
 struct Derivative<Argument, double>
 {
     typedef double arg_type;
-    typedef ConstOp result_type;
+    typedef ZeroOp result_type;
     result_type derivative;
 
-    HOST_DEVICE Derivative() : derivative(0.0) {}
+    HOST_DEVICE Derivative() : derivative() {}
 
     HD_INLINE double operator() (double x1, double x2 = 0.0, double x3 = 0.0, double x4 = 0.0) {
         return derivative(x1, x2, x3, x4);
     }
+};
+
+template <int Argument>
+struct Derivative<Argument, ZeroOp>
+{
+  typedef ZeroOp arg_type;
+  typedef ZeroOp result_type;
+  result_type derivative;
+
+  HOST_DEVICE Derivative() : derivative() {}
+
+  HD_INLINE double operator() (double x1, double x2 = 0.0, double x3 = 0.0, double x4 = 0.0) {
+    return derivative(x1, x2, x3, x4);
+  }
 };
 
 // Derivative of an independent variable, producing Kronicker delta
@@ -338,19 +352,33 @@ template <int Argument, int var>
 struct Derivative<Argument, Var<var, double > >
 {
     typedef Var<var, double> arg_type;
-    typedef ConstOp result_type;
+    typedef ZeroOp result_type;
     result_type derivative;
 
     HOST_DEVICE Derivative() {
-        if (Argument == var)
-            derivative = ConstOp(1.0);
-        else
-            derivative = ConstOp(0.0);
+      static_assert(Argument != var);
+      derivative = ZeroOp();
     }
-    
+
     HD_INLINE double operator() (double x1, double x2 = 0.0, double x3 = 0.0, double x4 = 0.0) {
         return derivative(x1, x2, x3, x4);
     }
+};
+
+template <int var>
+struct Derivative<var, Var<var, double> >
+{
+  typedef Var<var, double> arg_type;
+  typedef ConstOp result_type;
+  result_type derivative;
+
+  HOST_DEVICE Derivative() {
+    derivative = ConstOp(1.0);
+  }
+
+  HD_INLINE double operator() (double x1, double x2 = 0.0, double x3 = 0.0, double x4 = 0.0) {
+    return derivative(x1, x2, x3, x4);
+  }
 };
 
 // Multiple derivatives
@@ -358,7 +386,7 @@ template <int Argument, int times, typename Expr>
 struct Derivative_n
 {
     typedef Expr arg_type;
-    typedef typename Derivative<Argument, 
+    typedef typename Derivative<Argument,
                                 typename Derivative_n<Argument, times - 1, Expr>::result_type>::result_type result_type;
     result_type derivative;
 
@@ -494,6 +522,13 @@ HD_INLINE
 typename Derivative<Argument, ConstOp>::result_type
 D(const ConstOp& val) {
     return Derivative<Argument, ConstOp>().derivative;
+}
+
+template <int Argument>
+HD_INLINE
+typename Derivative<Argument, ZeroOp>::result_type
+D(const ZeroOp& val) {
+  return Derivative<Argument, ZeroOp>().derivative;
 }
 
 template <int Argument, int Arg2, typename Expr>
