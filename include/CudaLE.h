@@ -18,12 +18,12 @@
 #include "Variable.h"
 #include "Functions.h"
 #include "Derivative.h"
+#include "Simplify.h"
 
 #ifndef DEFINE_FUNCTOR
 #define DEFINE_FUNCTOR(NAME, FUNCTOR)                    \
     typedef __typeof__(FUNCTOR) NAME ## _type;               \
-    NAME ## _type NAME = FUNCTOR                         
-    
+    NAME ## _type NAME = FUNCTOR
 #endif
 
-#endif   // ----- #ifndef _CUDALE_H_  ----- 
+#endif   // ----- #ifndef _CUDALE_H_  -----
