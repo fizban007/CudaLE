@@ -168,6 +168,7 @@ struct BinaryOp<Op, Left, double>
   typedef BinaryOp<Op, Left, double> type;
 
   HOST_DEVICE BinaryOp(Left t1, double t2) : left(t1), right(ConstOp(t2)) {}
+  HOST_DEVICE BinaryOp(Left t1, ConstOp t2) : left(t1), right(t2) {}
   HOST_DEVICE BinaryOp(const type& op) : left(op.left), right(op.right) {}
   HOST_DEVICE BinaryOp() {}
 
@@ -220,6 +221,7 @@ struct BinaryOp<Op, double, Right>
   typedef BinaryOp<Op, double, Right> type;
 
   HOST_DEVICE BinaryOp(double t1, Right t2) : left(ConstOp(t1)), right(t2) {}
+  HOST_DEVICE BinaryOp(ConstOp t1, Right t2) : left(t1), right(t2) {}
   HOST_DEVICE BinaryOp(const type& op) : left(op.left), right(op.right) {}
   HOST_DEVICE BinaryOp() {}
 

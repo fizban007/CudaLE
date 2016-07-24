@@ -124,7 +124,7 @@ struct Derivative<Argument, BinaryOp<Minus, Left, Right> >
   // Right right;
   typedef BinaryOp<Minus, Left, Right> arg_type;
   typedef typename Simplified<
-    BinaryOp<Plus, typename Derivative<Argument, Left>::result_type
+    BinaryOp<Minus, typename Derivative<Argument, Left>::result_type
              , typename Derivative<Argument, Right>::result_type > >::result_type result_type;
   result_type derivative;
 
