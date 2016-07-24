@@ -79,7 +79,21 @@ struct Simplified<BinaryOp<Plus, ZeroOp, Right> > {
   }
 };
 
-// Simplifying left + zero
+// Special case
+template <>
+struct Simplified<BinaryOp<Plus, ZeroOp, ZeroOp> > {
+  typedef BinaryOp<Plus, ZeroOp, ZeroOp> arg_type;
+  typedef ZeroOp result_type;
+  result_type result;
+
+  HOST_DEVICE Simplified(arg_type expr) : result(ZeroOp{}) {}
+
+  HD_INLINE double operator() (double x1, double x2 = 0.0, double x3 = 0.0, double x4 = 0.0) {
+    return result(x1, x2, x3, x4);
+  }
+};
+
+// Simplifying left - zero
 template <typename Left>
 struct Simplified<BinaryOp<Minus, Left, ZeroOp> > {
   typedef BinaryOp<Minus, Left, ZeroOp> arg_type;
@@ -93,7 +107,7 @@ struct Simplified<BinaryOp<Minus, Left, ZeroOp> > {
   }
 };
 
-// Simplifying zero + right
+// Simplifying zero - right
 template <typename Right>
 struct Simplified<BinaryOp<Minus, ZeroOp, Right> > {
   typedef BinaryOp<Minus, ZeroOp, Right> arg_type;
@@ -101,6 +115,20 @@ struct Simplified<BinaryOp<Minus, ZeroOp, Right> > {
   result_type result;
 
   HOST_DEVICE Simplified(arg_type expr) : result(simplify(expr.right)) {}
+
+  HD_INLINE double operator() (double x1, double x2 = 0.0, double x3 = 0.0, double x4 = 0.0) {
+    return result(x1, x2, x3, x4);
+  }
+};
+
+// Special case
+template <>
+struct Simplified<BinaryOp<Minus, ZeroOp, ZeroOp> > {
+  typedef BinaryOp<Minus, ZeroOp, ZeroOp> arg_type;
+  typedef ZeroOp result_type;
+  result_type result;
+
+  HOST_DEVICE Simplified(arg_type expr) : result(ZeroOp{}) {}
 
   HD_INLINE double operator() (double x1, double x2 = 0.0, double x3 = 0.0, double x4 = 0.0) {
     return result(x1, x2, x3, x4);

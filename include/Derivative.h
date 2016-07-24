@@ -152,7 +152,7 @@ struct Derivative<Argument, BinaryOp<Multiply, Left, Right> >
 
   HOST_DEVICE Derivative(Left t1, Right t2) : derivative(simplify(simplify(t1 * D<Argument>(t2)) + simplify(D<Argument>(t1) * t2))) {}
   HOST_DEVICE Derivative(arg_type expr) :
-      derivative(expr.left * D<Argument>(expr.right), D<Argument>(expr.left) * expr.right) {}
+      derivative(simplify(expr.left * D<Argument>(expr.right) + D<Argument>(expr.left) * expr.right)) {}
   HOST_DEVICE Derivative() {}
 
   HD_INLINE double operator() (double x1, double x2 = 0.0, double x3 = 0.0, double x4 = 0.0) {
@@ -277,15 +277,15 @@ template <int Argument, typename Arg>
 struct Derivative<Argument, UnaryOp<Square, Arg> >
 {
   typedef UnaryOp<Square, Arg> arg_type;
-  typedef BinaryOp<Multiply, 
-                   BinaryOp<Multiply, double, typename Derivative<Argument, Arg>::result_type>
-                   , Arg > 
+  typedef typename Simplified<BinaryOp<Multiply,
+                                       typename Simplified<BinaryOp<Multiply, ConstOp, typename Derivative<Argument, Arg>::result_type> >::result_type
+                                     , Arg> >::result_type
   result_type;
   result_type derivative;
-    
-  HOST_DEVICE Derivative(Arg arg) : derivative(2.0 * D<Argument>(arg), arg) {}
-  HOST_DEVICE Derivative(arg_type expr) : derivative(2.0 * D<Argument>(expr.arg), expr.arg) {}
-    
+
+  HOST_DEVICE Derivative(Arg arg) : derivative(simplify(simplify(ConstOp(2.0) * D<Argument>(arg)) * arg)) {}
+  HOST_DEVICE Derivative(arg_type expr) : derivative(simplify(simplify(ConstOp(2.0) * D<Argument>(expr.arg)) * expr.arg)) {}
+
   HD_INLINE double operator() (double x1, double x2 = 0.0, double x3 = 0.0, double x4 = 0.0) {
     return derivative(x1, x2, x3, x4);
   }
@@ -298,12 +298,12 @@ struct Derivative<Argument, UnaryOp<Sqrt, Arg> >
   typedef UnaryOp<Sqrt, Arg> arg_type;
   typedef BinaryOp<Divide, 
                    typename Derivative<Argument, Arg>::result_type
-                   , BinaryOp<Multiply, double, UnaryOp<Sqrt, Arg> > > 
+                   , BinaryOp<Multiply, ConstOp, UnaryOp<Sqrt, Arg> > > 
   result_type;
   result_type derivative;
     
-  HOST_DEVICE Derivative(Arg arg) : derivative(D<Argument>(arg), 2.0 * sqrt(arg)) {}
-  HOST_DEVICE Derivative(arg_type expr) : derivative(D<Argument>(expr.arg), 2.0 * sqrt(expr.arg)) {}
+  HOST_DEVICE Derivative(Arg arg) : derivative(D<Argument>(arg), ConstOp(2.0) * sqrt(arg)) {}
+  HOST_DEVICE Derivative(arg_type expr) : derivative(D<Argument>(expr.arg), ConstOp(2.0) * sqrt(expr.arg)) {}
     
   HD_INLINE double operator() (double x1, double x2 = 0.0, double x3 = 0.0, double x4 = 0.0) {
     return derivative(x1, x2, x3, x4);
