@@ -362,7 +362,7 @@ struct Derivative<Argument, Var<var, double > >
   result_type derivative;
 
   HOST_DEVICE Derivative() {
-    static_assert(Argument != var);
+    static_assert(Argument != var, "Template matching error, Var and argument should be same");
     derivative = ZeroOp();
   }
 
