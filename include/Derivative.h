@@ -211,10 +211,10 @@ struct Derivative<Argument, UnaryOp<Cos, Arg> >
   typedef BinaryOp<Multiply, BinaryOp<Multiply, double, UnaryOp<Sin, Arg> >,
                    typename Derivative<Argument, Arg>::result_type > result_type;
   result_type derivative;
-    
+
   HOST_DEVICE Derivative(Arg arg) : derivative(-1.0 * sin(arg), D<Argument>(arg)) {}
   HOST_DEVICE Derivative(arg_type expr) : derivative(-1.0 * sin(expr.arg), D<Argument>(expr.arg)) {}
-    
+
   HD_INLINE double operator() (double x1, double x2 = 0.0, double x3 = 0.0, double x4 = 0.0) {
     return derivative(x1, x2, x3, x4);
   }
@@ -228,10 +228,10 @@ struct Derivative<Argument, UnaryOp<Exp, Arg> >
   typedef BinaryOp<Multiply, UnaryOp<Exp, Arg>,
                    typename Derivative<Argument, Arg>::result_type > result_type;
   result_type derivative;
-    
+
   HOST_DEVICE Derivative(Arg arg) : derivative(exp(arg), D<Argument>(arg)) {}
   HOST_DEVICE Derivative(arg_type expr) : derivative(exp(expr.arg), D<Argument>(expr.arg)) {}
-    
+
   HD_INLINE double operator() (double x1, double x2 = 0.0, double x3 = 0.0, double x4 = 0.0) {
     return derivative(x1, x2, x3, x4);
   }
@@ -244,10 +244,10 @@ struct Derivative<Argument, UnaryOp<Log, Arg> >
   typedef UnaryOp<Log, Arg> arg_type;
   typedef BinaryOp<Divide, typename Derivative<Argument, Arg>::result_type, Arg> result_type;
   result_type derivative;
-    
+
   HOST_DEVICE Derivative(Arg arg) : derivative(D<Argument>(arg), arg) {}
   HOST_DEVICE Derivative(arg_type expr) : derivative(D<Argument>(expr.arg), expr.arg) {}
-    
+
   HD_INLINE double operator() (double x1, double x2 = 0.0, double x3 = 0.0, double x4 = 0.0) {
     return derivative(x1, x2, x3, x4);
   }
@@ -263,10 +263,10 @@ struct Derivative<Argument, UnaryOp<Pow<n>, Arg> >
                    , UnaryOp<Pow< n-1 >, Arg> > 
       result_type;
   result_type derivative;
-    
+
   HOST_DEVICE Derivative(Arg arg) : derivative((double)n * D<Argument>(arg), pow<n-1>(arg)) {}
   HOST_DEVICE Derivative(arg_type expr) : derivative((double)n * D<Argument>(expr.arg), pow<n-1>(expr.arg)) {}
-    
+
   HD_INLINE double operator() (double x1, double x2 = 0.0, double x3 = 0.0, double x4 = 0.0) {
     return derivative(x1, x2, x3, x4);
   }
